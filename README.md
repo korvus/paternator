@@ -60,5 +60,6 @@ This example generate two files, one js file and a css file. The CSS file will h
 
 When you will duplicate the package by CLI, component's name will be asked. From that, a folder with the component's name will be generate automatically to your folder target. Inside this folder, you will found all the files you set up in your models.
 
+## resources
 
-
+https://github.com/korvus/paternator
