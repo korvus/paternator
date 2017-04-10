@@ -12,7 +12,7 @@ npm install paternator
 
 into your package.json file from your project:
 
-```
+```javascript
   "paternator": {
     "models": "models/files.js",
     "path": "app/"
@@ -33,7 +33,7 @@ Each json object have two parts, both are strings. First is the name of the futu
 
 Example :
 
-```json
+```javascript
 exports.entrance = ['index.js',`
 import React from 'react';
 import s from './[name].css';
