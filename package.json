@@ -1,5 +1,5 @@
 {
-  "name": "@canopy/create-easy-components",
+  "name": "paternator",
   "version": "1.0.0",
   "description": "helper for create easyli component on canopy",
   "main": "index.js",
