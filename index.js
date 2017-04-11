@@ -3,36 +3,41 @@ const path = require('path')
 const inquirer = require('inquirer-promise');
 const chalk = require('chalk');
 
+const appRoot = path.resolve(__dirname);
+
 let question = require('./conf.js');
 
 let path_config, files, fileName, fileText = "";
 
+projectPath = appRoot+'/../../';
+
 function takeDefault(warningMssg){
-	console.log(chalk.red.bold(`WARNING`), chalk.white.bold(`: ${warningMssg}`));
-	files = require('./models/files.js');
-	path_config = question.path;
+	console.warn(chalk.red.bold(`WARNING`), chalk.white.bold(`: ${warningMssg}`));
+	files = require(`${appRoot}/models/files.js`);
+	path_config = projectPath+question.path;
 }
 
-if (!fs.existsSync('../../package.json')){
+
+if (!fs.existsSync(`${projectPath}package.json`)){
 	takeDefault(`there is no package.json at the root of your project. Please verify you installed paternator at good place.`);
     process.exit();
 }else{
-	let apackage = require('../../package.json');
+	let apackage = require(`${projectPath}package.json`);
 	if(!apackage.paternator){
 		takeDefault(`Paternator is not defined into your project package.`);
 	}else{
 		if(apackage.paternator.path && apackage.paternator.models){
-			path_config = `../../${apackage.paternator.path}`;
-			files = require(`../../${apackage.paternator.models}`);
+			path_config = `${projectPath}${apackage.paternator.path}`;
+			files = require(`${projectPath}${apackage.paternator.models}`);
 		}else{
-			takeDefault(`miss some infos into your package.json.`);
+			takeDefault(`miss some params into your package.json. models and path are both required. see documentation online for a better use.`);
 		}
 	}
 }
 
 inquirer.prompt(question.conf).then(function (answers) {
-  if (!fs.existsSync(`../..${path_config}`)){
-    console.log(chalk.yellow.bold(`seem you didn't configured where to create files. ${path_config} don't exist, it will be automatically create !`));
+  if (!fs.existsSync(path_config)){
+    console.warn(chalk.yellow.bold(`seem you didn't configured where to create files. ${path_config} don't exist, it will be automatically create !`));
   }
   let directory = `${path_config}/${answers.component_name}`;
   if (!fs.existsSync(directory)){
@@ -41,14 +46,13 @@ inquirer.prompt(question.conf).then(function (answers) {
 
   	duplicateFiles(directory, answers.component_name);
   }else{
-  	console.log(chalk.red.bold(`a component have already this name !`));
+  	console.error(chalk.red.bold(`a component have already this name !`));
     process.exit();
   }
 });
 
 function duplicateFiles(pathfolder, componentName){
 
-	console.log(files);
 	for(let file in files) {
 
 	    var Componentname = capitalizeFirstLetter(componentName);
@@ -61,9 +65,9 @@ function duplicateFiles(pathfolder, componentName){
 		// On écrit le fichier
 		fs.writeFile(`${pathfolder}/${fileName}`, fileText, function(err) {
 		    if(err) {
-		        return console.log(err);
+		        return console.error(err);
 		    }
-		    console.log(`${file} created`);
+		    console.info(`${file} created`);
 		});
 
 	}
