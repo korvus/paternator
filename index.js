@@ -3,9 +3,9 @@ const path = require('path')
 const inquirer = require('inquirer-promise');
 const chalk = require('chalk');
 
-var question = require('./conf.js');
-var path_config = "";
-var files = ""
+let question = require('./conf.js');
+
+let path_config, files, fileName, fileText = "";
 
 function takeDefault(warningMssg){
 	console.log(chalk.red.bold(`WARNING`), chalk.white.bold(`: ${warningMssg}`));
@@ -14,10 +14,10 @@ function takeDefault(warningMssg){
 }
 
 if (!fs.existsSync('../../package.json')){
-	takeDefault(`there is no package.json into your project. Please verify you installed paternator at good place.`);
+	takeDefault(`there is no package.json at the root of your project. Please verify you installed paternator at good place.`);
     process.exit();
 }else{
-	var apackage = require('../../package.json');
+	let apackage = require('../../package.json');
 	if(!apackage.paternator){
 		takeDefault(`Paternator is not defined into your project package.`);
 	}else{
@@ -25,44 +25,45 @@ if (!fs.existsSync('../../package.json')){
 			path_config = `../../${apackage.paternator.path}`;
 			files = require(`../../${apackage.paternator.models}`);
 		}else{
-			takeDefault(`miss some info to your files.`);
+			takeDefault(`miss some infos into your package.json.`);
 		}
 	}
 }
 
-var inquireromise = inquirer.prompt(question.conf).then(function (answers) {
+inquirer.prompt(question.conf).then(function (answers) {
   if (!fs.existsSync(`../..${path_config}`)){
-    takeDefault(`seem you didn't configured where to create files. ${path_config} don't exist, it will be automatically create !`);
+    console.log(chalk.yellow.bold(`seem you didn't configured where to create files. ${path_config} don't exist, it will be automatically create !`));
   }
-  var folder = `../..${path_config}/${answers.component_name}`;
-  if (!fs.existsSync(folder)){
+  let directory = `${path_config}/${answers.component_name}`;
+  if (!fs.existsSync(directory)){
 
-    fs.mkdirSync(folder);
+    fs.mkdirSync(directory);
 
-  	duplicateFiles(folder, answers.component_name);
+  	duplicateFiles(directory, answers.component_name);
   }else{
-  	takeDefault(`a component have already this name !`);
+  	console.log(chalk.red.bold(`a component have already this name !`));
     process.exit();
   }
 });
 
 function duplicateFiles(pathfolder, componentName){
 
-	for(var file in files) {
+	console.log(files);
+	for(let file in files) {
 
-    var Componentname = capitalizeFirstLetter(componentName);
+	    var Componentname = capitalizeFirstLetter(componentName);
 
 		var fileName = files[file][0].replace(/\[name\]/gi, componentName);
-		var fileText = files[file][1].replace(/\[name\]/gi, componentName);
-    //with capital on first letter
-    var fileText = files[file][1].replace(/\[Name\]/gi, Componentname);
+		fileText = files[file][1].replace(/\[name\]/gi, componentName);
+	    //with capital on first letter
+	    fileText = files[file][1].replace(/\[Name\]/gi, Componentname);
 
 		// On écrit le fichier
 		fs.writeFile(`${pathfolder}/${fileName}`, fileText, function(err) {
 		    if(err) {
 		        return console.log(err);
 		    }
-		    console.log(`file created`);
+		    console.log(`${file} created`);
 		});
 
 	}
