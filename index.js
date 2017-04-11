@@ -1,42 +1,48 @@
 const fs = require('fs');
 const path = require('path')
-const inquirer = require('inquirer');
+const inquirer = require('inquirer-promise');
+const chalk = require('chalk');
 
 var question = require('./conf.js');
+var path_config = "";
+var files = ""
 
 function takeDefault(warningMssg){
-	console.log(`WARNING : ${warningMssg}`);
-	var files = require('./models/files.js');
-	var path_config = question.path;
+	console.log(chalk.red.bold(`WARNING`), chalk.white.bold(`: ${warningMssg}`));
+	files = require('./models/files.js');
+	path_config = question.path;
 }
 
-if (!fs.existsSync('../package.json')){
+if (!fs.existsSync('../../package.json')){
 	takeDefault(`there is no package.json into your project. Please verify you installed paternator at good place.`);
+    process.exit();
 }else{
-	var apackage = require('../package.json');
+	var apackage = require('../../package.json');
 	if(!apackage.paternator){
-		takeDefault(`missing infos into your package json.`);
+		takeDefault(`Paternator is not defined into your project package.`);
 	}else{
 		if(apackage.paternator.path && apackage.paternator.models){
-			var path_config = `../${apackage.paternator.path}`;
-			var files = require(`../${apackage.paternator.models}`);
+			path_config = `../../${apackage.paternator.path}`;
+			files = require(`../../${apackage.paternator.models}`);
 		}else{
 			takeDefault(`miss some info to your files.`);
 		}
 	}
 }
 
-
-inquirer.prompt(question.conf).then(function (answers) {
-  if (!fs.existsSync(path_config)){
-    console.warn(`Your path ${path_config} doesn't exist !`);
+var inquireromise = inquirer.prompt(question.conf).then(function (answers) {
+  if (!fs.existsSync(`../..${path_config}`)){
+    takeDefault(`seem you didn't configured where to create files. ${path_config} don't exist, it will be automatically create !`);
   }
   var folder = `${path_config}/${answers.component_name}`;
-  if (!fs.existsSync(folder)){
-  	fs.mkdirSync(folder);
-  	duplicateFiles(folder, answers.component_name);
+  if (!fs.existsSync(`../..${folder}`)){
+
+    fs.mkdirSync(`../..${folder}`);
+
+  	duplicateFiles(`../..${folder}`, answers.component_name);
   }else{
-  	console.warn(`a component have already this name !`);
+  	takeDefault(`a component have already this name !`);
+    process.exit();
   }
 });
 
