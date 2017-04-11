@@ -34,12 +34,12 @@ var inquireromise = inquirer.prompt(question.conf).then(function (answers) {
   if (!fs.existsSync(`../..${path_config}`)){
     takeDefault(`seem you didn't configured where to create files. ${path_config} don't exist, it will be automatically create !`);
   }
-  var folder = `${path_config}/${answers.component_name}`;
-  if (!fs.existsSync(`../..${folder}`)){
+  var folder = `../..${path_config}/${answers.component_name}`;
+  if (!fs.existsSync(folder)){
 
-    fs.mkdirSync(`../..${folder}`);
+    fs.mkdirSync(folder);
 
-  	duplicateFiles(`../..${folder}`, answers.component_name);
+  	duplicateFiles(folder, answers.component_name);
   }else{
   	takeDefault(`a component have already this name !`);
     process.exit();
