@@ -1,6 +1,6 @@
 {
   "name": "paternator",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "helper for create easyli component on canopy",
   "main": "index.js",
   "scripts": {

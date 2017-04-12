@@ -28,7 +28,11 @@ if (!fs.existsSync(`${projectPath}package.json`)){
 	}else{
 		if(apackage.paternator.path && apackage.paternator.models){
 			path_config = `${projectPath}${apackage.paternator.path}`;
-			files = require(`${projectPath}${apackage.paternator.models}`);
+			if(!fs.existsSync(`${projectPath}${apackage.paternator.path}`)){
+				takeDefault(`models is set up correctly in package.json but paternator don't find any files in the path you indicate : ${projectPath}${apackage.paternator.path}. default models will be used.`);
+			}else{
+				files = require(`${projectPath}${apackage.paternator.models}`);
+			}
 		}else{
 			takeDefault(`miss some params into your package.json. models and path are both required. see documentation online for a better use.`);
 		}
