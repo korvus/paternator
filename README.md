@@ -21,13 +21,13 @@ into your package.json file from your project:
 
 models : path to the special file (see bellow) wich contains all the files to duplicate.
 
-path : folder path where all the files will be duplicates
+path : folder path where all the patern will be duplicate
 
 ## files.js (models)
 
 files.js contain a kind of "map" / "plan" of the files you want to generate automatically.
 
-It's a json object, where each json will be future files.
+It's a json object, where each json will be the future files.
 
 Each json object have two parts, both are strings. First is the name of the futur file, second its content.
 

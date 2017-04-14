@@ -17,7 +17,6 @@ function takeDefault(warningMssg){
 	path_config = projectPath+question.path;
 }
 
-
 if (!fs.existsSync(`${projectPath}package.json`)){
 	takeDefault(`there is no package.json at the root of your project. Please verify you installed paternator at good place.`);
     process.exit();
@@ -40,39 +39,54 @@ if (!fs.existsSync(`${projectPath}package.json`)){
 }
 
 inquirer.prompt(question.conf).then(function (answers) {
-  if (!fs.existsSync(path_config)){
-    console.warn(chalk.yellow.bold(`seem you didn't configured where to create files. ${path_config} don't exist, it will be automatically create !`));
-  }
-  let directory = `${path_config}/${answers.component_name}`;
-  if (!fs.existsSync(directory)){
 
-    fs.mkdirSync(directory);
+  let directory = `${path_config}`;
+  duplicateFiles(directory, answers.component_name);
 
-  	duplicateFiles(directory, answers.component_name);
-  }else{
-  	console.error(chalk.red.bold(`a component have already this name !`));
-    process.exit();
-  }
 });
 
 function duplicateFiles(pathfolder, componentName){
 
 	for(let file in files) {
 
-	    var Componentname = capitalizeFirstLetter(componentName);
+	    let Componentname = capitalizeFirstLetter(componentName);
 
-		var fileName = files[file][0].replace(/\[name\]/gi, componentName);
+		let fileName = files[file][0].replace(/\[name\]/gi, componentName);
 		fileText = files[file][1].replace(/\[name\]/gi, componentName);
 	    //with capital on first letter
 	    fileText = files[file][1].replace(/\[Name\]/gi, Componentname);
 
-		// On écrit le fichier
-		fs.writeFile(`${pathfolder}/${fileName}`, fileText, function(err) {
-		    if(err) {
-		        return console.error(err);
-		    }
-		    console.info(`${file} created`);
-		});
+	    itemsPath = fileName.split("/");
+	    let deepPath = itemsPath.length;
+
+	    let tempPath = `${pathfolder}`;
+
+	    for(let stepDirectory in itemsPath) {
+
+	    	//If last part of the queue
+	    	if(parseInt(stepDirectory)===(parseInt(itemsPath.length)-1)) {
+
+	    		// Create file
+
+	    		fs.writeFile(`${tempPath}/${itemsPath[stepDirectory]}`, fileText, function(err) {
+		    		if(err) {
+		        		return console.error(err);
+		    		}
+		    		console.info(`${file} created`);
+				});
+
+	    	} else {
+
+	    		tempPath = `${tempPath}/${itemsPath[stepDirectory]}`;
+
+	    		//Create folders
+		    	if (!fs.existsSync(tempPath)) {
+		    		fs.mkdirSync(tempPath);
+		    	}
+
+	    	}
+
+	    }
 
 	}
 }

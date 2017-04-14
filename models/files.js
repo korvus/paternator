@@ -1,5 +1,5 @@
 
-exports.entrance = ['index.js',`
+exports.entrance = ['[name]/index.js',`
 import React from 'react';
 import s from './[name].css';
 
@@ -16,5 +16,5 @@ const [Name] = ({ id }) => (
 export default [Name];
 `];
 
-exports.index = ['[name].css',`
+exports.index = ['[name]/[name].css',`
 `];

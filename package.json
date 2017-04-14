@@ -1,10 +1,11 @@
 {
   "name": "paternator",
-  "version": "2.0.4",
+  "version": "2.1.0",
   "description": "helper for create easyli component on canopy",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prettier": "node node_modules/prettier/bin/prettier.js raw/index.js > index.js "
   },
   "bin": {
     "paternator": "./index.js"
@@ -21,5 +22,8 @@
   "license": "ISC",
   "dependencies": {
     "inquirer-promise": "1.0.0"
+  },
+  "devDependencies": {
+    "prettier": "1.1.0"
   }
 }
