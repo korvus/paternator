@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prettier": "node node_modules/prettier/bin/prettier.js raw/index.js > index.js "
+    "prettier": "node node_modules/prettier/bin/prettier.js --write index.js",
+    "precommit": "prettier"
   },
   "bin": {
     "paternator": "./index.js"

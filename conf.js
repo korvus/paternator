@@ -1,3 +1,4 @@
+"use strict";
 
 exports.conf = [
   {
@@ -7,4 +8,4 @@ exports.conf = [
   }
 ];
 
-exports.path = '/app';
+exports.path = 'app';
