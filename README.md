@@ -22,6 +22,7 @@ You got two choices.
     "path": "app/"
   },
 ```
+This usage is much faster, prefer it.
 
 - 2 Inside a json in your project, named ``conf.paternator.json``
 ```json
