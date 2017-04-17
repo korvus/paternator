@@ -25,6 +25,7 @@
     "inquirer-promise": "1.0.0"
   },
   "devDependencies": {
+    "glob": "7.1.1",
     "prettier": "1.1.0"
   }
 }
