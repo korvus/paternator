@@ -5,12 +5,16 @@ Allow to create easily a component automatically inside a react architecture.
 ## Installation
 
 ```
-npm install paternator
+npm install paternator -E
 ```
+
+__-E is for dev dependencies.__
+
 
 ## setup paternator
 
-into your package.json file from your project:
+You got two choices.
+- 1 Into your package.json file, from your project:
 
 ```javascript
   "paternator": {
@@ -18,6 +22,18 @@ into your package.json file from your project:
     "path": "app/"
   },
 ```
+This usage is much faster, prefer it.
+
+- 2 Inside a json in your project, named ``conf.paternator.json``
+```json
+{
+	"paternator": {
+		"models": "models/files.js",
+		"path": "app/"
+	}
+}
+```
+
 
 models : path to the special file (see bellow) wich contains all the files to duplicate.
 

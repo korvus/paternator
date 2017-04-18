@@ -4,6 +4,7 @@ const fs = require("fs");
 const path = require("path");
 const inquirer = require("inquirer-promise");
 const chalk = require("chalk");
+const glob = require("glob")
 
 const appRoot = path.resolve(__dirname);
 
@@ -19,17 +20,29 @@ function takeDefault(warningMssg) {
   path_config = projectPath + question.path;
 }
 
+function checkGlob (){
+  glob(projectPath+"**/?(conf.paternator.json)", {'nodir':true}, function (er, listFiles) {
+    if(listFiles.length>0){
+        const conf_file = require(listFiles[0]);
+        path_config = `${projectPath}${conf_file.paternator.path}`;
+        files = require(`${projectPath}${conf_file.paternator.models}`);
+        askQuestion();
+    }else{
+      takeDefault(
+      `Paternator is not defined into your project package, and no conf.paternator.json have been found. Default settings are use. See documentation for further informations.`
+      );
+      askQuestion();
+    }
+  })
+}
+
 if (!fs.existsSync(`${projectPath}package.json`)) {
-  takeDefault(
-    `there is no package.json at the root of your project. Paternator should be in your nodes_module directory.`
-  );
+  takeDefault(`there is no package.json at the root of your project. Paternator should be in your nodes_module directory.`);
   process.exit();
 } else {
   let apackage = require(`${projectPath}package.json`);
   if (!apackage.paternator) {
-    takeDefault(
-      `Paternator is not defined into your project package. Default settings are use. See documentation for further informations.`
-    );
+    checkGlob();
   } else {
     if (apackage.paternator.path && apackage.paternator.models) {
       path_config = `${projectPath}${apackage.paternator.path}`;
@@ -41,20 +54,22 @@ if (!fs.existsSync(`${projectPath}package.json`)) {
         files = require(`${projectPath}${apackage.paternator.models}`);
       }
     } else {
-      takeDefault(
-        `miss some params into your package.json. models and path are both required. see documentation online for a better use.`
-      );
+      takeDefault(`miss some params into your package.json. models and path are both required. see documentation online for a better use.`);
     }
+    askQuestion();
   }
 }
 
-inquirer.prompt(question.conf).then(function(answers) {
-  if (!fs.existsSync(path_config)) {
-    generateDirectories(path_config, answers.component_name);
-  } else {
-    duplicateFiles(path_config, answers.component_name);
-  }
-});
+function askQuestion(){
+
+  inquirer.prompt(question.conf).then(function(answers) {
+    if (!fs.existsSync(path_config)) {
+      generateDirectories(path_config, answers.component_name);
+    } else {
+      duplicateFiles(path_config, answers.component_name);
+    }
+  });
+}
 
 function generateDirectories(rootPath, paternName) {
   console.warn(
@@ -74,6 +89,7 @@ function generateDirectories(rootPath, paternName) {
 }
 
 function duplicateFiles(pathfolder, componentName) {
+
   for (let file in files) {
     let Componentname = capitalizeFirstLetter(componentName);
 
@@ -91,6 +107,10 @@ function duplicateFiles(pathfolder, componentName) {
       //If last part of the queue
       if (parseInt(stepDirectory) === parseInt(itemsPath.length) - 1) {
         // Create file
+        if(fs.existsSync(`${tempPath}/${itemsPath[stepDirectory]}`)){
+          console.warn(chalk.red.bold(`ERROR`), chalk.white.bold(`: This chunk already exist.`));
+          process.exit();
+        }
         fs.writeFile(
           `${tempPath}/${itemsPath[stepDirectory]}`,
           fileText,
