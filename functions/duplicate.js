@@ -10,40 +10,43 @@ const duplicateFiles = function(pathfolder, componentName, files) {
     //with capital on first letter
     fileText = files[file][1].replace(/\[Name\]/gi, Componentname);
 
-    //console.log(typeof fileName);
-    let itemsPath = fileName.split("/");
+    if(file!=="templateName"){
 
-    let tempPath = pathfolder;
+      //console.log(typeof fileName);
+      let itemsPath = fileName.split("/");
 
-    for (let stepDirectory in itemsPath) {
-      //If last part of the queue
-      if (parseInt(stepDirectory) === parseInt(itemsPath.length) - 1) {
-        // Create file
-        if (fs.existsSync(`${tempPath}/${itemsPath[stepDirectory]}`)) {
-          console.warn(
-            chalk.red.bold(`ERROR`),
-            chalk.white.bold(`: This chunk already exist.`)
-          );
-          process.exit();
-        }
-        fs.writeFile(
-          `${tempPath}/${itemsPath[stepDirectory]}`,
-          fileText,
-          function(err) {
-            if (err) {
-              return console.error(err);
-            }
-            console.info(`${file} created`);
+      let tempPath = pathfolder;
+
+      for (let stepDirectory in itemsPath) {
+        //If last part of the queue
+        if (parseInt(stepDirectory) === parseInt(itemsPath.length) - 1) {
+          // Create file
+          if (fs.existsSync(`${tempPath}/${itemsPath[stepDirectory]}`)) {
+            console.warn(
+              chalk.red.bold(`ERROR`),
+              chalk.white.bold(`: This chunk already exist.`)
+            );
+            process.exit();
           }
-        );
-      } else {
-        tempPath = `${tempPath}/${itemsPath[stepDirectory]}`;
+          fs.writeFile(
+            `${tempPath}/${itemsPath[stepDirectory]}`,
+            fileText,
+            function(err) {
+              if (err) {
+                return console.error(err);
+              }
+              console.info(`${file} created`);
+            }
+          );
+        } else {
+          tempPath = `${tempPath}/${itemsPath[stepDirectory]}`;
 
-        //Create folders
-        if (!fs.existsSync(tempPath)) {
-          fs.mkdirSync(tempPath, function(err, folder) {
-            if (err) throw err;
-          });
+          //Create folders
+          if (!fs.existsSync(tempPath)) {
+            fs.mkdirSync(tempPath, function(err, folder) {
+              if (err) throw err;
+            });
+          }
         }
       }
     }

@@ -3,6 +3,7 @@
 const fs = require("fs");
 const path = require("path");
 const chalk = require("chalk");
+const inquirer = require("inquirer-promise");
 const glob = require("fast-glob");
 
 const appRoot = path.resolve(__dirname);
@@ -10,6 +11,7 @@ const appRoot = path.resolve(__dirname);
 let question = require("./conf.js");
 let askQuestion = require("./functions/ask.js");
 
+let localo = [];
 let path_config, files, fileName, fileText = "";
 
 let projectPath = appRoot + "/../../";
@@ -35,17 +37,19 @@ if (!fs.existsSync(`${projectPath}package.json`)) {
       path_config = `${projectPath}${apackage.paternator.path}`;
       if (!fs.existsSync(`${projectPath}${apackage.paternator.path}`)) {
         takeDefault(
-          `models is set up correctly in package.json but paternator don't find any files in the path you indicate : ${projectPath}${apackage.paternator.path}. default models will be used.`
+          `models is set up correctly but paternator don't find any files to the path you indicate : ${projectPath}${apackage.paternator.path}. default models will be used instead.`
         );
+        askQuestion(path_config, files);
       } else {
-        files = require(`${projectPath}${apackage.paternator.models}`);
+        requireFiles(apackage.paternator.models);
+        //files = require(`${projectPath}${apackage.paternator.models}`);
       }
     } else {
       takeDefault(
         `miss some params into your package.json. models and path are both required. see documentation online for a better use.`
       );
+      askQuestion(path_config, files);
     }
-    askQuestion(path_config, files);
   }
 }
 
@@ -56,8 +60,9 @@ function checkGlob() {
       //console.log(listFiles[0]);
       const conf_file = require(`${projectPath}${listFiles[0]}`);
       path_config = `${projectPath}${conf_file.paternator.path}`;
-      files = require(`${projectPath}${conf_file.paternator.models}`);
-      askQuestion(path_config, files);
+      requireFiles(conf_file.paternator.models);
+      //files = require(`${projectPath}${conf_file.paternator.models}`);
+      //askQuestion(path_config, files);
     } else {
       takeDefault(
         `Paternator is not defined into your project package, and no conf.paternator.json have been found. Default settings are use. See documentation for further informations.`
@@ -65,4 +70,35 @@ function checkGlob() {
       askQuestion(path_config, files);
     }
   });
+}
+
+function requireFiles (models){
+  if(typeof models === "object"){
+    for(let model in models){
+      if(!fs.existsSync(`${projectPath}${models[model]}`)){
+        takeDefault(`models is set up correctly but paternator don't find any files to the path you indicate : ${projectPath}${models[model]}. default models will be used instead.`);
+        askQuestion(path_config, files);
+        return;
+      }else{
+        require(`${projectPath}${models[model]}`);
+        localo[model] = require(`${projectPath}${models[model]}`);
+        //console.log(localo);
+      }
+    }
+    inquirer.prompt([
+      {
+        type: 'list',
+        name: 'Pattern:',
+        message: 'Choose what template you want to duplicate.',
+        choices: [
+          'order a pizza',
+          'eat a steak'
+        ]
+      }
+    ]).then(function(choosen) {
+      console.log(choosen);
+    });
+  }else if(typeof models === "string"){
+    files = require(`${projectPath}${models}`);
+  }
 }
