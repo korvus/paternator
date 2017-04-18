@@ -5,10 +5,10 @@ Allow to create easily a component automatically inside a react architecture.
 ## Installation
 
 ```
-npm install paternator -E
+npm install paternator -D
 ```
 
-__-E is for dev dependencies.__
+__-D is for dev dependencies.__
 
 
 ## setup paternator
