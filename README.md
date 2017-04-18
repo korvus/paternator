@@ -1,6 +1,6 @@
 # README #
 
-Allow to create easily a component automatically inside a react architecture.
+Allow to create easily a component automatically inside a react architecture, or any javascript package project.
 
 ## Installation
 
@@ -35,9 +35,9 @@ This usage is much faster, prefer it.
 ```
 
 
-models : path to the special file (see bellow) wich contains all the files to duplicate.
+models : (string) path to the special file (see bellow) wich contains all the files to duplicate.
 
-path : folder path where all the patern will be duplicate
+path : (string) folder path where all the patern will be duplicate
 
 ## files.js (models)
 
