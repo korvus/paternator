@@ -10,8 +10,7 @@ const duplicateFiles = function(pathfolder, componentName, files) {
     //with capital on first letter
     fileText = files[file][1].replace(/\[Name\]/gi, Componentname);
 
-    if(file!=="templateName"){
-
+    if (file !== "templateName") {
       //console.log(typeof fileName);
       let itemsPath = fileName.split("/");
 

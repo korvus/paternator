@@ -42,6 +42,7 @@ if (!fs.existsSync(`${projectPath}package.json`)) {
         askQuestion(path_config, files);
       } else {
         requireFiles(apackage.paternator.models);
+
         //files = require(`${projectPath}${apackage.paternator.models}`);
       }
     } else {
@@ -57,12 +58,9 @@ if (!fs.existsSync(`${projectPath}package.json`)) {
 function checkGlob() {
   glob("**/?(conf.paternator.json)", { cwd: projectPath }).then(listFiles => {
     if (listFiles.length > 0) {
-      //console.log(listFiles[0]);
       const conf_file = require(`${projectPath}${listFiles[0]}`);
       path_config = `${projectPath}${conf_file.paternator.path}`;
       requireFiles(conf_file.paternator.models);
-      //files = require(`${projectPath}${conf_file.paternator.models}`);
-      //askQuestion(path_config, files);
     } else {
       takeDefault(
         `Paternator is not defined into your project package, and no conf.paternator.json have been found. Default settings are use. See documentation for further informations.`
@@ -72,42 +70,43 @@ function checkGlob() {
   });
 }
 
-function requireFiles (models){
-  if(typeof models === "object"){
-    for(let model in models){
-      if(!fs.existsSync(`${projectPath}${models[model]}`)){
-        takeDefault(`models is set up correctly but paternator don't find any files to the path you indicate : ${projectPath}${models[model]}. default models will be used instead.`);
+function requireFiles(models) {
+  if (typeof models === "object") {
+    for (let model in models) {
+      if (!fs.existsSync(`${projectPath}${models[model]}`)) {
+        takeDefault(
+          `models is set up correctly but paternator don't find any files to the path you indicate : ${projectPath}${models[model]}. default models will be used instead.`
+        );
         askQuestion(path_config, files);
         return;
-      }else{
-        templates[model] = {"value":"","name":""};
+      } else {
+        templates[model] = { value: "", name: "" };
         templates[model].value = require(`${projectPath}${models[model]}`);
-        if(templates[model].value.templateName){
+        if (templates[model].value.templateName) {
           templates[model].name = templates[model].value.templateName;
-        }else{
+        } else {
           templates[model].name = models[model];
         }
       }
     }
 
-    //console.log(templates);
+    inquirer
+      .prompt([
+        {
+          type: "list",
+          name: "pattern",
+          message: "Choose what template you want to duplicate.",
+          choices: templates
+        }
+      ])
+      .then(function(choosen) {
+        files = choosen.pattern;
+        askQuestion(path_config, files);
+      });
 
-    inquirer.prompt([
-      {
-        type: 'list',
-        name: 'pattern',
-        message: 'Choose what template you want to duplicate.',
-        choices: templates
-      }
-    ]).then(function(choosen) {
-      files = choosen.pattern;
-      askQuestion(path_config, files);
-    });
-
-  // If only one patern
-  }else if(typeof models === "string"){
+    // If only one patern
+  } else if (typeof models === "string") {
     files = require(`${projectPath}${models}`);
-    console.log(files);
     askQuestion(path_config, files);
   }
 }
