@@ -5,12 +5,13 @@ const duplicateFiles = function(pathfolder, componentName, files) {
   for (let file in files) {
     let Componentname = capitalizeFirstLetter(componentName);
 
-    let fileName = files[file][0].replace(/\[name\]/gi, componentName);
-    fileText = files[file][1].replace(/\[name\]/gi, componentName);
-    //with capital on first letter
-    fileText = files[file][1].replace(/\[Name\]/gi, Componentname);
-
     if (file !== "templateName") {
+      let fileName = files[file][0].replace(/\[name\]/g, componentName);
+      fileName = fileName.replace(/\[name\]/g, componentName);
+
+      fileText = files[file][1].replace(/\[name\]/g, componentName);
+      fileText = fileText.replace(/\[Name\]/g, Componentname);
+
       //console.log(typeof fileName);
       let itemsPath = fileName.split("/");
 
