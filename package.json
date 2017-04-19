@@ -1,6 +1,6 @@
 {
   "name": "paternator",
-  "version": "2.1.3",
+  "version": "2.1.4",
   "description": "helper for create easyli component on canopy",
   "main": "index.js",
   "scripts": {
@@ -23,9 +23,9 @@
   "license": "ISC",
   "dependencies": {
     "inquirer-promise": "1.0.0"
+    "fast-glob": "1.0.0",
   },
   "devDependencies": {
-    "fast-glob": "^1.0.0",
     "prettier": "1.1.0"
   }
 }
