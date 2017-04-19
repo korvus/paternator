@@ -11,7 +11,7 @@ const appRoot = path.resolve(__dirname);
 let question = require("./conf.js");
 let askQuestion = require("./functions/ask.js");
 
-let localo = [];
+let templates = [];
 let path_config, files, fileName, fileText = "";
 
 let projectPath = appRoot + "/../../";
@@ -80,25 +80,34 @@ function requireFiles (models){
         askQuestion(path_config, files);
         return;
       }else{
-        require(`${projectPath}${models[model]}`);
-        localo[model] = require(`${projectPath}${models[model]}`);
-        //console.log(localo);
+        templates[model] = {"value":"","name":""};
+        templates[model].value = require(`${projectPath}${models[model]}`);
+        if(templates[model].value.templateName){
+          templates[model].name = templates[model].value.templateName;
+        }else{
+          templates[model].name = models[model];
+        }
       }
     }
+
+    //console.log(templates);
+
     inquirer.prompt([
       {
         type: 'list',
-        name: 'Pattern:',
+        name: 'pattern',
         message: 'Choose what template you want to duplicate.',
-        choices: [
-          'order a pizza',
-          'eat a steak'
-        ]
+        choices: templates
       }
     ]).then(function(choosen) {
-      console.log(choosen);
+      files = choosen.pattern;
+      askQuestion(path_config, files);
     });
+
+  // If only one patern
   }else if(typeof models === "string"){
     files = require(`${projectPath}${models}`);
+    console.log(files);
+    askQuestion(path_config, files);
   }
 }

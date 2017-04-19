@@ -28,7 +28,7 @@ This usage is much faster, prefer it.
 ```json
 {
 	"paternator": {
-		"models": "models/files.js",
+		"models": ["models/files.js", "an/other/pattern.tpl"],
 		"path": "app/"
 	}
 }
@@ -37,7 +37,7 @@ This usage is much faster, prefer it.
 
 models : (string) path to the special file (see bellow) wich contains all the files to duplicate.
 
-path : (string) folder path where all the patern will be duplicate
+path : (string or array) folder path where all the patern will be duplicate. If you pass an array, it mean you have differents pattern available. Then, you will be abble to choose the pattern of your choices by a dialog box.
 
 ## files.js (models)
 
@@ -71,6 +71,14 @@ exports.index = ['[name].css',`
 `];
 ```
 This example generate two files, one js file and a css file. The CSS file will have the component name.
+For using the name to the variables, you just have to use the mask [name], or [Name] if you want it with a majuscule on the first letter.
+You can also duplicate a full structure if you feel like it by using a path with ``/``.
+Example:
+```javascript
+exports.entrance = ['this/is-a/directory/index.js',`...etc
+
+```
+
 
 ## Use
 
@@ -82,6 +90,7 @@ I invite to make a npm script shortcut for a better use.
     "paternator": "node node_modules/paternator"
   },
 ```
+
 
 ## resources
 
