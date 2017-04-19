@@ -22,8 +22,8 @@
   "author": "simon ertel",
   "license": "ISC",
   "dependencies": {
-    "inquirer-promise": "1.0.0"
-    "fast-glob": "1.0.0",
+    "inquirer-promise": "1.0.0",
+    "fast-glob": "1.0.0"
   },
   "devDependencies": {
     "prettier": "1.1.0"
