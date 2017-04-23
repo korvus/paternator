@@ -1,11 +1,11 @@
 {
   "name": "paternator",
-  "version": "2.1.0",
+  "version": "2.1.6",
   "description": "helper for create easyli component on canopy",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prettier": "node node_modules/prettier/bin/prettier.js --write index.js",
+    "prettier": "node node_modules/prettier/bin/prettier.js --write index.js functions/duplicate.js functions/ask.js",
     "precommit": "prettier"
   },
   "bin": {
@@ -22,7 +22,8 @@
   "author": "simon ertel",
   "license": "ISC",
   "dependencies": {
-    "inquirer-promise": "1.0.0"
+    "inquirer-promise": "1.0.0",
+    "fast-glob": "1.0.0"
   },
   "devDependencies": {
     "glob": "7.1.1",
