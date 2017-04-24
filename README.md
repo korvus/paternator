@@ -32,7 +32,6 @@ This usage is much faster, prefer it.
 {
 	"paternator": {
 		"models": ["models/files.js", "an/other/pattern.tpl"],
->>>>>>> 93dfed2151c1215a62703acf02e1ef1a4f5976e7
 		"path": "app/"
 	}
 }
